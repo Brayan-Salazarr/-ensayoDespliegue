@@ -19,42 +19,49 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @RequiredArgsConstructor
 public class SecurityConfig {
 
-    private final JwtAuthenticationFilter jwtAuthFilter;
-    private final AuthenticationProvider authenticationProvider;
+        private final JwtAuthenticationFilter jwtAuthFilter;
+        private final AuthenticationProvider authenticationProvider;
 
-    @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        http
-                // Deshabilitamos CSRF (Cross-Site Request Forgery) porque usamos JWT (stateless)
-                .csrf(csrf -> csrf.disable())
+        @Bean
+        public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+                http
+                                // Deshabilitamos CSRF (Cross-Site Request Forgery) porque usamos JWT
+                                // (stateless)
+                                .csrf(csrf -> csrf.disable())
 
-                // Definimos las reglas de autorización
-                .authorizeHttpRequests(authz -> authz
-                        // Endpoints públicos (registro y login)
-                        .requestMatchers("/api/auth/**").permitAll()
-                        
-                        // Endpoints de productos:
-                        // Solo ADMIN puede crear productos (POST)
-                        .requestMatchers(org.springframework.http.HttpMethod.POST, "/api/products").hasAuthority(com.example.adso.model.Role.ADMIN.name())
-                        // USER y ADMIN pueden ver productos (GET)
-                        .requestMatchers(org.springframework.http.HttpMethod.GET, "/api/products").hasAnyAuthority(com.example.adso.model.Role.ADMIN.name(), com.example.adso.model.Role.USER.name())
+                                // Definimos las reglas de autorización
+                                .authorizeHttpRequests(authz -> authz
+                                                // Endpoints públicos (registro y login)
+                                                .requestMatchers("/api/auth/**").permitAll()
 
-                        // Todas las demás peticiones deben estar autenticadas
-                        .anyRequest().authenticated()
-                )
+                                                // Permitir acceso público a raíz y error
+                                                .requestMatchers("/", "/error").permitAll()
 
-                // Configuramos la gestión de sesiones como STATELESS (sin estado)
-                // Spring Security no creará ni usará sesiones HTTP.
-                .sessionManagement(session -> session
-                        .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-                )
+                                                // Endpoints de productos:
+                                                // Solo ADMIN puede crear productos (POST)
+                                                .requestMatchers(org.springframework.http.HttpMethod.POST,
+                                                                "/api/products")
+                                                .hasAuthority(com.example.adso.model.Role.ADMIN.name())
+                                                // USER y ADMIN pueden ver productos (GET)
+                                                .requestMatchers(org.springframework.http.HttpMethod.GET,
+                                                                "/api/products")
+                                                .hasAnyAuthority(com.example.adso.model.Role.ADMIN.name(),
+                                                                com.example.adso.model.Role.USER.name())
 
-                // Definimos el proveedor de autenticación
-                .authenticationProvider(authenticationProvider)
+                                                // Todas las demás peticiones deben estar autenticadas
+                                                .anyRequest().authenticated())
 
-                // Añadimos nuestro filtro de JWT ANTES del filtro estándar de autenticación
-                .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
+                                // Configuramos la gestión de sesiones como STATELESS (sin estado)
+                                // Spring Security no creará ni usará sesiones HTTP.
+                                .sessionManagement(session -> session
+                                                .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
 
-        return http.build();
-    }
+                                // Definimos el proveedor de autenticación
+                                .authenticationProvider(authenticationProvider)
+
+                                // Añadimos nuestro filtro de JWT ANTES del filtro estándar de autenticación
+                                .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
+
+                return http.build();
+        }
 }
