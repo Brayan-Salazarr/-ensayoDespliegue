@@ -42,7 +42,6 @@ public class SecurityConfig {
                 return source;
         }
 
-        @Bean
         public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
                 http
                                 // Deshabilitamos CSRF (Cross-Site Request Forgery) porque usamos JWT
