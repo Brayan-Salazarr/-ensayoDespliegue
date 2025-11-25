@@ -33,10 +33,6 @@ public class SecurityConfig {
                                 .authorizeHttpRequests(authz -> authz
                                                 // Endpoints públicos (registro y login)
                                                 .requestMatchers("/api/auth/**").permitAll()
-
-                                                // Permitir acceso público a raíz y error
-                                                .requestMatchers("/", "/error").permitAll()
-
                                                 // Endpoints de productos:
                                                 // Solo ADMIN puede crear productos (POST)
                                                 .requestMatchers(org.springframework.http.HttpMethod.POST,
