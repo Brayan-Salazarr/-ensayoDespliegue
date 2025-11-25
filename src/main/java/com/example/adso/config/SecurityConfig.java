@@ -54,6 +54,7 @@ public class SecurityConfig {
                                                 // Endpoints públicos (registro y login)
                                                 .requestMatchers("/api/auth/**").permitAll()
                                                 // Endpoints de productos:
+                                                .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                                                 // Solo ADMIN puede crear productos (POST)
                                                 .requestMatchers(org.springframework.http.HttpMethod.POST,
                                                                 "/api/products")
