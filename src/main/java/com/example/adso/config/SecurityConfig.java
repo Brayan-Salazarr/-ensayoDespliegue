@@ -31,7 +31,7 @@ public class SecurityConfig {
            public CorsConfigurationSource corsConfigurationSource() {
                 CorsConfiguration configuration = new CorsConfiguration();
 
-                configuration.setAllowedOrigins(Arrays.asList("https://practica-frontend-pi.vercel.app"));
+                configuration.setAllowedOrigins(Arrays.asList("https://front-ensayo.vercel.app/login"));
                 configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
                 configuration.setAllowedHeaders(Arrays.asList("*"));
                 configuration.setAllowCredentials(true);
