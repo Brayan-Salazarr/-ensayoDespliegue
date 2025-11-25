@@ -42,10 +42,11 @@ public class SecurityConfig {
                 return source;
         }
 
+        @Bean
         public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
                 http
                                 // Deshabilitamos CSRF (Cross-Site Request Forgery) porque usamos JWT
-                                // (stateless)
+                                .cors(cors -> cors.configurationSource(corsConfigurationSource()))
                                 .csrf(csrf -> csrf.disable())
 
                                 // Definimos las reglas de autorización
