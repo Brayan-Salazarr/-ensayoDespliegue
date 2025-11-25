@@ -1,5 +1,10 @@
 package com.example.adso.config;
 
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+import java.util.Arrays;
+
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -23,6 +28,18 @@ public class SecurityConfig {
         private final AuthenticationProvider authenticationProvider;
 
         @Bean
+           public CorsConfigurationSource corsConfigurationSource() {
+                CorsConfiguration configuration = new CorsConfiguration();
+
+                configuration.setAllowedOrigins(Arrays.asList("https://practica-frontend-pi.vercel.app"));
+                configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
+                configuration.setAllowedHeaders(Arrays.asList("*"));
+                configuration.setAllowCredentials(true);
+                UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+                source.registerCorsConfiguration("/**", configuration); // Aplica a todas las rutas
+                return source;
+        }
+
         public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
                 http
                                 // Deshabilitamos CSRF (Cross-Site Request Forgery) porque usamos JWT
