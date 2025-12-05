@@ -31,7 +31,7 @@ public class SecurityConfig {
     private final JwtAuthenticationFilter jwtAuthFilter;
     private final AuthenticationProvider authenticationProvider;
 
-     @Bean
+    @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
         		.cors(cors -> cors.configurationSource(corsConfigurationSource()))
@@ -69,24 +69,20 @@ public class SecurityConfig {
     }
     
     @Bean
-    public CorsConfigurationSource corsConfigurationSource() {
-        CorsConfiguration configuration = new CorsConfiguration();
-        
-        // Permitir el origen de Angular (ajusta el puerto si es necesario)
-        configuration.setAllowedOrigins(List.of("http://localhost:4200")); 
-        
-        // Permitir los métodos HTTP que usas (GET, POST, etc.)
-        configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
-        
-        // Permitir las cabeceras, especialmente Authorization para el token JWT
-        configuration.setAllowedHeaders(List.of("Authorization", "Content-Type"));
-        
-        // Permitir credenciales si fuera necesario (opcional en JWT stateless, pero útil a veces)
-        configuration.setAllowCredentials(true);
+public CorsConfigurationSource corsConfigurationSource() {
+    CorsConfiguration configuration = new CorsConfiguration();
 
-        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        // Aplicar esta configuración a todas las rutas
-        source.registerCorsConfiguration("/**", configuration);
-        return source;
-    }
+    configuration.setAllowedOrigins(List.of(
+        "http://localhost:4200",
+        "https://front-ensayo.vercel.app/"   
+    ));
+
+    configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
+    configuration.setAllowedHeaders(List.of("Authorization", "Content-Type"));
+    configuration.setAllowCredentials(true);
+
+    UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+    source.registerCorsConfiguration("/**", configuration);
+    return source;
+}
 }
